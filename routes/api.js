@@ -1,4 +1,4 @@
-const {Workout} = require('../models/workout');
+const Workout = require('../models/workout');
 const path = require('path');
 const { Router } = require('express');
 const router = require('express').Router();
@@ -30,14 +30,19 @@ router.post('/api/workouts', ({body}, res) =>{
 
 // PUT
 router.put('/api/workouts/:id', ({body, params}, res) => {
+    console.log(params);
+    console.log(body);
+
     Workout.findByIdAndUpdate(
-    params.id, {$push:{excersices:body}},
+    params.id, {$push: {
+        exercises: body
+    }
+    },
     {
     new: true,
-    runValidators:true
     })
-    .then(dbWorkout => {
-        res.json(dbWorkout);
+    .then(Workout => {
+        res.json(Workout);
     })
     .catch(err => {
         res.status(400).json(err);
@@ -45,10 +50,29 @@ router.put('/api/workouts/:id', ({body, params}, res) => {
 });
 
 
-// GET
-router.get("/api/workouts/range", (req, res) =>{
-const filter = { age: { $gte: 30 } };
-let docs = await Character.aggregate([{ $match: filter }]);
+// GET routes for api
 
-)};
+router.get("/api/workouts", async (req, res) =>{
+    const arrange = await Workout.aggregate([        {
+            $addFields: {
+                totalDuration: {$sum: "$exercises.duration"}
+            }
+        }
+    ])
+    res.json(arrange)
+
+});
+
+router.get("/api/workouts/range", async (req, res) =>{
+    const arrange = await Workout.aggregate([
+        {
+            $addFields: {
+                totalDuration: {$sum: "$exercises.duration"}
+            }
+        }
+    ])
+    .sort({day: -1}).limit(7)
+    res.json(arrange)
+});
+
 module.exports = router;
