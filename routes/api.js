@@ -1,8 +1,9 @@
 const {Workout} = require('../models/workout');
 const path = require('path');
+const { Router } = require('express');
 const router = require('express').Router();
 
-// Get
+// GET
 
 router.get('/', (req, res) => 
 res.sendFile(path.join(__dirname, "../public/index.html"))
@@ -17,7 +18,7 @@ res.sendFile(path.join(__dirname, "../public/stats.html"))
 );
 
 // POST
-router.post('/api/workout', ({body}, res) =>{
+router.post('/api/workouts', ({body}, res) =>{
     Workout.create(body)
     .then(dbWorkout => {
         res.json(dbWorkout);
@@ -28,9 +29,9 @@ router.post('/api/workout', ({body}, res) =>{
 });
 
 // PUT
-router.put('/api/workout/:id', ({body, params}, res) =>{
-    Workout.findById(
-        params.id, {$push:{excersices:body}},
+router.put('/api/workouts/:id', ({body, params}, res) => {
+    Workout.findByIdAndUpdate(
+    params.id, {$push:{excersices:body}},
     {
     new: true,
     runValidators:true
@@ -44,7 +45,10 @@ router.put('/api/workout/:id', ({body, params}, res) =>{
 });
 
 
+// GET
+router.get("/api/workouts/range", (req, res) =>{
+const filter = { age: { $gte: 30 } };
+let docs = await Character.aggregate([{ $match: filter }]);
 
-
-
-
+)};
+module.exports = router;

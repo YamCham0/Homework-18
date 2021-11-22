@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const Workout = require("./api")
-
 
 const Schema = mongoose.Schema;
 // models for the workouts
