@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const Workout = require("./api")
+
 
 const Schema = mongoose.Schema;
 // models for the workouts
@@ -11,12 +13,12 @@ const WorkoutSchema = new Schema ({
         {
         name: String,
         type: {type: String},
-        weight: Int,
-        sets: Int,
-        reps: Int,
-        distance: Int,
-        duration: Int,       
-        },]
+        weight: Number,
+        sets: Number,
+        reps: Number,
+        distance: Number,
+        duration: Number
+    },]
     });
 
 const Workout = mongoose.model("Workout", WorkoutSchema);
